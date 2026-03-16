@@ -47,47 +47,72 @@
   <script>
     const player = document.getElementById('player');
     const status = document.getElementById('status');
-    let files = [];
 
-    // Automatically find every .m4a file in the "clips/" folder
-    fetch('clips/')
-      .then(r => r.text())
-      .then(html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const links = [...doc.querySelectorAll('a')];
-        
-        files = links
-          .map(a => a.getAttribute('href'))
-          .filter(href => href && href.toLowerCase().endsWith('.m4a'))
-          .map(href => 'clips/' + href);
+    const files = [
+      'clips/New Recording 37.m4a',
+      'clips/New Recording 38.m4a',
+      'clips/New Recording 39.m4a',
+      'clips/New Recording 40.m4a',
+      'clips/New Recording 41.m4a',
+      'clips/New Recording 42.m4a',
+      'clips/New Recording 43.m4a',
+      'clips/New Recording 44.m4a',
+      'clips/New Recording 45.m4a',
+      'clips/New Recording 46.m4a',
+      'clips/New Recording 47.m4a',
+      'clips/New Recording 48.m4a',
+      'clips/New Recording 49.m4a',
+      'clips/New Recording 50.m4a',
+      'clips/New Recording 51.m4a',
+      'clips/New Recording 52.m4a',
+      'clips/New Recording 53.m4a',
+      'clips/New Recording 54.m4a',
+      'clips/New Recording 55.m4a',
+      'clips/New Recording 56.m4a',
+      'clips/New Recording 57.m4a',
+      'clips/New Recording 58.m4a',
+      'clips/New Recording 59.m4a',
+      'clips/New Recording 60.m4a',
+      'clips/New Recording 61.m4a',
+      'clips/New Recording 62.m4a',
+      'clips/New Recording 63.m4a',
+      'clips/New Recording 64.m4a',
+      'clips/New Recording 65.m4a',
+      'clips/New Recording 66.m4a',
+      'clips/New Recording 67.m4a',
+      'clips/New Recording 68.m4a',
+      'clips/New Recording 69.m4a',
+      'clips/New Recording 70.m4a',
+      'clips/New Recording 71.m4a',
+      'clips/New Recording 72.m4a',
+      'clips/New Recording 73.m4a',
+      'clips/New Recording 74.m4a',
+      'clips/New Recording 75.m4a',
+      'clips/New Recording 76.m4a',
+      'clips/New Recording 77.m4a',
+      'clips/New Recording 78.m4a',
+      'clips/New Recording 79.m4a',
+      'clips/New Recording 80.m4a',
+      'clips/New Recording 81.m4a',
+      'clips/New Recording 82.m4a',
+      'clips/New Recording 83.m4a',
+      'clips/New Recording 84.m4a',
+      'clips/New Recording 85.m4a'
+    ];
 
-        if (files.length === 0) {
-          status.textContent = 'No .m4a files found in clips/';
-        } else {
-          status.textContent = `${files.length} clip${files.length === 1 ? '' : 's'} ready`;
-        }
-      })
-      .catch(() => {
-        status.textContent = 'Cannot read clips/ folder (needs web server)';
-      });
+    status.textContent = `${files.length} clips ready`;
 
     function playRandom() {
-      if (files.length === 0) return;
-      
       const idx = Math.floor(Math.random() * files.length);
       const file = files[idx];
-      
       const name = file.split('/').pop().replace(/\.m4a$/i, '');
       status.textContent = name;
-      
       player.src = file;
       player.play().catch(() => {
-        status.textContent = name + ' (click ▶ on player)';
+        status.textContent = name + ' (click ▶)';
       });
     }
 
-    // Optional: auto next when finished
     player.addEventListener('ended', playRandom);
   </script>
 
