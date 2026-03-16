@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random M4A</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #111;
+      color: #eee;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    button {
+      font-size: 1.4rem;
+      padding: 1rem 2.5rem;
+      background: #444;
+      color: white;
+      border: 1px solid #777;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover { background: #555; }
+    audio {
+      width: 320px;
+      max-width: 90vw;
+    }
+    #status {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      min-height: 1.4em;
+    }
+  </style>
+</head>
+<body>
+
+  <button onclick="playRandom()">Random Clip</button>
+  <div id="status"></div>
+  <audio id="player" controls></audio>
+
+  <script>
+    const player = document.getElementById('player');
+    const status = document.getElementById('status');
+    let files = [];
+
+    // Automatically find every .m4a file in the "clips/" folder
+    fetch('clips/')
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = [...doc.querySelectorAll('a')];
+        
+        files = links
+          .map(a => a.getAttribute('href'))
+          .filter(href => href && href.toLowerCase().endsWith('.m4a'))
+          .map(href => 'clips/' + href);
+
+        if (files.length === 0) {
+          status.textContent = 'No .m4a files found in clips/';
+        } else {
+          status.textContent = `${files.length} clip${files.length === 1 ? '' : 's'} ready`;
+        }
+      })
+      .catch(() => {
+        status.textContent = 'Cannot read clips/ folder (needs web server)';
+      });
+
+    function playRandom() {
+      if (files.length === 0) return;
+      
+      const idx = Math.floor(Math.random() * files.length);
+      const file = files[idx];
+      
+      const name = file.split('/').pop().replace(/\.m4a$/i, '');
+      status.textContent = name;
+      
+      player.src = file;
+      player.play().catch(() => {
+        status.textContent = name + ' (click ▶ on player)';
+      });
+    }
+
+    // Optional: auto next when finished
+    player.addEventListener('ended', playRandom);
+  </script>
+
+</body>
+</html>
